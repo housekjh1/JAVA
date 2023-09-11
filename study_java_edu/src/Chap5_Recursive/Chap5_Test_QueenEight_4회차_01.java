@@ -155,47 +155,66 @@ public class Chap5_Test_QueenEight_4회차_01 {
 		return checkRow(d, x) && checkCol(d, y) && checkSE(d, x, y) && checkSW(d, x, y);
 	}
 
-	public static Point nextMove(int[][] d, int x, int y) {
+	public static int nextMove(int[][] d, int x, int y) {
 		for (int i = y; i < d[0].length; i++) {
 			if (checkMove(d, x, i)) {
-				Point p = new Point(x, i);
-				return p;
+				return i;
 			}
 		}
-		return null;
+		return -1;
 	}
 
 	public static void solveQueen(int[][] d) {
-		int n = 8;
-		int count = 0;
+		int count = 0, n = 8, q = 1;
 		int x = 0, y = 0;
-		Stack s = new Stack(10);
-		d[x++][y] = 1;
-		count++;
+		Stack s = new Stack(n);
 		Point p = new Point(x, y);
-		s.push(p);
 
-		while (count < n) {
-			p = nextMove(d, x, y);
-			if (p != null) {
-				x = p.getX();
-				y = p.getY();
-				d[x++][y] = 1;
-				count++;
-				s.push(p);
-				y = 0;
-			} else {
-				if (count != 0) {
-					p = s.pop();
-					x = p.getX();
-					y = p.getY();
-					d[x][y] = 0;
-					count--;
-					y++;
-				} else {
+		while (true) {
+			while (count < n) {
+				if (x == 0 && y >= d[0].length && s.isEmpty())
 					break;
+				y = nextMove(d, x, y);
+				if (y != -1) {
+					d[x][y] = 1;
+					count++;
+					s.push(new Point(x, y));
+					x++;
+					y = 0;
+				} else {
+					if (!s.isEmpty()) {
+						p = s.pop();
+						x = p.getX();
+						y = p.getY();
+						d[x][y] = 0;
+						count--;
+						y++;
+					} else {
+						break;
+					}
 				}
 			}
+			if (x == 0 && y >= d[0].length && s.isEmpty()) {
+				System.out.println("모든 풀이가 완료되었습니다.");
+				break;
+			}
+			System.out.println("풀이 " + q++);
+			printQueen(d);
+			p = s.pop();
+			x = p.getX();
+			y = p.getY();
+			d[x][y] = 0;
+			count--;
+			y++;
+		}
+	}
+
+	private static void printQueen(int[][] data) {
+		for (int[] element : data) {
+			for (int j = 0; j < data[0].length; j++) {
+				System.out.print(element[j] + " ");
+			}
+			System.out.println();
 		}
 	}
 
@@ -207,12 +226,5 @@ public class Chap5_Test_QueenEight_4회차_01 {
 				data[i][j] = 0;
 
 		solveQueen(data);
-
-		for (int[] element : data) {
-			for (int j = 0; j < data[0].length; j++) {
-				System.out.print(element[j] + " ");
-			}
-			System.out.println();
-		}
 	}
 }
