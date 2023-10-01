@@ -29,8 +29,8 @@ class IntQueue2 {
 //--- 생성자(constructor) ---//
 	public IntQueue2(int maxlen) {
 		//구현
-		num = front = rear = 0;
 		capacity = maxlen;
+		front = rear = num = 0;
 		try {
 			que = new int[capacity];
 		} catch (OutOfMemoryError e) {
@@ -41,23 +41,22 @@ class IntQueue2 {
 //--- 큐에 데이터를 인큐 ---//
 	public int enque(int x) throws OverflowIntQueue2Exception {
 		//구현
-		if (num >= capacity) {
-			throw new OverflowIntQueue2Exception();
-		}
-		que[rear++] = x;
+		if (rear >= capacity) throw new OverflowIntQueue2Exception();
+		int idx = rear;
+		que[idx] = x;
+		rear = (rear + 1) % capacity;
 		num++;
-		if (rear == capacity) rear = 0;
-		return x;
+		return 0;
 	}
 
 //--- 큐에서 데이터를 디큐 ---//
 	public int deque() throws EmptyIntQueue2Exception {
 		//구현
 		if (num <= 0) throw new EmptyIntQueue2Exception();
-		int x = que[front++];
+		int idx = front;
+		front = (front + 1) % capacity;
 		num--;
-		if (front == capacity) front = 0;
-		return x;
+		return que[idx];
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
@@ -75,8 +74,12 @@ class IntQueue2 {
 //--- 큐에서 x를 검색하여 인덱스(찾지 못하면 –1)를 반환 ---//
 	public int indexOf(int x) {
 		//구현
+		if (num <= 0) {
+			System.out.println("큐가 비어있습니다.");;
+			return -1;
+		}
 		for (int i = 0; i < num; i++) {
-			int idx = (i + front) % capacity;// capacity 이상으로 넘어갈 시 0으로 복귀
+			int idx = (i + front) % capacity;
 			if (que[idx] == x) return idx;
 		}
 		return -1;
@@ -105,13 +108,15 @@ class IntQueue2 {
 //--- 큐 안의 모든 데이터를 프런트 → 리어 순으로 출력 ---//
 	public void dump() {
 		//구현
-		if (num <= 0) System.out.println("큐가 비어 있습니다.");
-		else {
-			for (int i = 0; i < num; i++) {
-				System.out.println(que[(i + front) % capacity] + " ");
-			}
-			System.out.println();
+		if (num <= 0) {
+			System.out.println("큐가 비어있습니다.");
+			return;
 		}
+		for (int i = 0; i < num; i++) {
+			int idx = (i + front) % capacity;
+			System.out.print(que[idx] + " ");
+		}
+		System.out.println();
 	}
 }
 
@@ -121,7 +126,7 @@ public class 실습4_4정수큐_배열 {
 
 	public static void main(String[] args) {
 		Scanner stdIn = new Scanner(System.in);
-		IntQueue2 s = new IntQueue2(4); // 최대 64개를 인큐할 수 있는 큐
+		IntQueue2 s = new IntQueue2(64); // 최대 64개를 인큐할 수 있는 큐
 
 		while (true) {
 			System.out.println(" "); // 메뉴 구분을 위한 빈 행 추가

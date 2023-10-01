@@ -30,49 +30,43 @@ class Queue2 {
 	}
 
 //--- 생성자(constructor) ---//
-	public Queue2(int maxlen) {
-		// 구현
-		num = front = rear = 0;
-		capacity = maxlen;
-		try {
-			que = new ArrayList<Integer>(capacity);
-		} catch (OutOfMemoryError e) {
-			capacity = 0;
-		}
+public Queue2(int maxlen) {
+	//구현
+	capacity = maxlen;
+	front = rear = num = 0;
+	try {
+		que = new ArrayList<Integer>(capacity);
+	} catch (OutOfMemoryError e) {
+		capacity = 0;
 	}
+}
 
 //--- 큐에 데이터를 인큐 ---//
 	public int enque(int x) throws OverflowQueueException {
-	    if (num >= capacity)
-	        throw new OverflowQueueException();
-	    que.add(rear, x);
-	    rear++;
-	    num++;
-	    if (rear == capacity)
-	        rear = 0;
-	    return x;
+		//구현
+		if (num >= capacity) throw new OverflowQueueException();
+		que.add(rear, x);
+		rear++;
+		num++;
+		return 0;
 	}
-
 
 //--- 큐에서 데이터를 디큐 ---//
 	public int deque() throws EmptyQueueException {
-	    if (num <= 0)
-	        throw new EmptyQueueException();
-	    int x = que.get(front);
-	    front++;
-	    num--;
-	    if (front == capacity)
-	        front = 0;
-	    return x;
+		//구현
+		if (num <= 0) throw new EmptyQueueException();
+		int result = que.get(front);
+		que.remove(front);
+		rear--;
+		num--;
+		return result;
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
 	public int peek() throws EmptyQueueException {
-		// 구현
-		if (num <= 0)
-			throw new EmptyQueueException();
+		//구현
+		if (num <= 0) throw new EmptyQueueException();
 		return que.get(front);
-
 	}
 
 //--- 큐를 비움 ---//
@@ -82,13 +76,16 @@ class Queue2 {
 
 //--- 큐에서 x를 검색하여 인덱스(찾지 못하면 –1)를 반환 ---//
 	public int indexOf(int x) {
-		// 구현
+		//구현
+		if (num <= 0) {
+			System.out.println("큐가 비었습니다.");
+			return -1;
+		}
 		for (int i = 0; i < num; i++) {
-			if (que.get((i + front) % capacity) == x)
-				return i;
+			int idx = (i + front) % capacity;
+			if (que.get(idx) == x) return idx;
 		}
 		return -1;
-
 	}
 
 //--- 큐의 크기를 반환 ---//
@@ -113,18 +110,18 @@ class Queue2 {
 
 //--- 큐 안의 모든 데이터를 프런트 → 리어 순으로 출력 ---//
 	public void dump() {
-		// 구현
-		if (num <= 0)
-			System.out.println("큐가 비어 있습니다.");
-		else {
-			for (int i = 0; i < num; i++) {
-				System.out.println(que.get((i + front) % capacity) + " ");
-			}
-			System.out.println();
+		//구현
+		if (num <= 0) {
+			System.out.println("큐가 비었습니다.");
+			return;
 		}
+		for (int i = 0; i < num; i++) {
+			int idx = (i + front) % capacity;
+			System.out.print(que.get(idx) + " ");
+		}
+		System.out.println();
 	}
 }
-
 public class 실습4_4정수큐_리스트 {
 	public static void main(String[] args) {
 		Scanner stdIn = new Scanner(System.in);

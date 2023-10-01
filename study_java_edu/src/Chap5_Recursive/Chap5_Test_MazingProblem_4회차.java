@@ -136,68 +136,55 @@ public class Chap5_Test_MazingProblem_4회차 {
 
 	public static void path(int[][] maze, int[][] mark, int ix, int iy) {
 
-		mark[1][1] = 1;
-		StackList st = new StackList(50);
-		Items3 temp = new Items3(0, 0, 0);// N :: 0
-		temp.x = 1;
-		temp.y = 1;// (1, 1) 출발점
-		temp.dir = 2;// E:: 2, 출발 시 동쪽으로 이동
-		mark[temp.x][temp.y] = 2;// 미로 찾기 궤적은 2로 표시
-		st.push(temp);
+			mark[1][1] = 1;
+			StackList st = new StackList(50);
+			Items3 temp = new Items3(0, 0, 0);//N :: 0
+			int i = 0, j = 0, d = 0, g = 0, h = 0, c = 0;
+			temp.x = 1;
+			temp.y = 1;
+			temp.dir = 2;//E:: 2
+			mark[temp.x][temp.y] = 2;//미로 찾기 궤적은 2로 표시
+			st.push(temp);
 
-		int i = 0;
-		int j = 0;
-		int g = 0;
-		int h = 0;
-		int d = 0;
-		int c = 0;
-		Items3 tmp;
-
-		while (!st.isEmpty()) // stack not empty
-		{
-
-			if (c >= 8) {
-				tmp = st.pop();// unstack, 현재 위치 가져오기
+			while (!st.isEmpty()) // stack not empty
+			{
+				if (c >= 8) {
+				Items3 tmp = st.pop(); // unstack
+				i = tmp.x;
+				j = tmp.y;
+				mark[i][j] = 1;//backtracking 궤적은 1로 표시
+				}
+				
+				Items3 tmp = st.peek();
 				i = tmp.x;
 				j = tmp.y;
 				d = tmp.dir;
-				mark[i][j] = 1;// backtracking 궤적은 1로 표시
-			}
+				c = 0;
+				
+				while (c < 8) // moves forward
+				{
+					g = (i + moves[d].a); h = (j + moves[d].b);
+					
+					if ((g == (ix - 1)) && (h == (iy - 1))) { // reached exit
+						mark[g][h] = 3;			// output path
+						st.clear();
+						break;
+					}
+					if ((maze[g][h] == 0) && (mark[g][h] == 0)) { // new position
+						st.push(new Items3(g, h, d));
+						mark[g][h] = 2;
+						i = g;
+						j = h;
+						c = 0;
+					} else {
+						d = (d + 1) % 8;
+						c++;
+					}
 
-			tmp = st.peek();
-			i = tmp.x;
-			j = tmp.y;
-			d = tmp.dir;
-
-			c = 0;
-
-			while (c < 8) // moves forward
-			{
-				g = i + moves[d].a;
-				h = j + moves[d].b;
-
-				if ((g == ix - 1) && (h == iy - 1)) { // reached exit
-					mark[g][h] = 3;
-					st.clear();
-					break; // output path
-				}
-
-				if ((maze[g][h] == 0) && (mark[g][h] == 0)) { // new position
-					mark[g][h] = 2;
-					st.push(new Items3(g, h, d));
-					i = g;
-					j = h;
-					c = 0;
-				} else {
-					d++;
-					d %= 8;
-					c++;
 				}
 			}
+			System.out.println("no path in maze ");
 		}
-		System.out.println("no path in maze ");
-
-	}
 
 	static void showMatrix(int[][] d, int row, int col) {
 		for (int i = 0; i <= row; i++) {
@@ -214,19 +201,18 @@ public class Chap5_Test_MazingProblem_4회차 {
 		int[][] mark = new int[14][17];
 
 		int input[][] = { // 12 x 15
-				{ 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1 },
+				{ 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1 }, 
 				{ 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 0, 1, 1, 1 },
-				{ 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1 },
+				{ 0, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 1, 1 }, 
 				{ 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0 },
-				{ 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1 },
+				{ 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1 }, 
 				{ 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1 },
-				{ 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1 },
+				{ 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 1 }, 
 				{ 0, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1 },
-				{ 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1 },
+				{ 0, 0, 1, 1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1 }, 
 				{ 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0 },
-				{ 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0 },
-				{ 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 }
-		};
+				{ 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0 }, 
+				{ 0, 1, 0, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 } };
 		for (int ia = 0; ia < 8; ia++)
 			moves[ia] = new Offsets3(0, 0);// 배열에 offsets 객체를 치환해야 한다.
 			moves[0].a = -1; moves[0].b = 0;
@@ -242,17 +228,11 @@ public class Chap5_Test_MazingProblem_4회차 {
 		// d = d + 1;//java는 지원안됨
 		for (int i = 0; i < 14; i++) {
 			for (int j = 0; j < 17; j++) {
-				// input[12][15] -> maze[14][17]
-				if (i == 0) {
+				if (i == 0 || j == 0 || i == (maze.length - 1) || j == (maze[0].length - 1)) {
 					maze[i][j] = 1;
-				} else if (j == 0) {
-					maze[i][j] = 1;
-				} else if (j == maze[0].length - 1) {
-					maze[i][j] = 1;
-				} else if (i == maze.length - 1) {
-					maze[i][j] = 1;
-				} else if (i >= 1 && j >= 1 && i < maze.length - 1 && j < maze[0].length - 1) {
-					maze[i][j] = input[i - 1][j - 1];
+				}
+				if ((i + 1) > 0 && (i + 1) < (maze.length - 1) && (j + 1) > 0 && (j + 1) < (maze[0].length - 1)) {
+					maze[i + 1][j + 1] = input[i][j];
 				}
 			}
 		}
@@ -263,7 +243,16 @@ public class Chap5_Test_MazingProblem_4회차 {
 		showMatrix(mark, 13, 16);
 
 		path(maze, mark, 13, 16);
+		clearing(mark);
 		System.out.println("mark::");
 		showMatrix(mark, 13, 16);
+	}
+
+	private static void clearing(int[][] mark) {
+		for (int i = 0; i < mark.length; i++) {
+			for (int j = 0; j < mark[0].length; j++) {
+				if (mark[i][j] == 1) mark[i][j] = 0;
+			}
+		}
 	}
 }

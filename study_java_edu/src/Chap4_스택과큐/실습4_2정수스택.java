@@ -30,8 +30,8 @@ class IntStack {
 //--- 생성자(constructor) ---//
 	public IntStack(int maxlen) {
 		//구현
-		ptr = 0;
 		capacity = maxlen;
+		ptr = 0;
 		try {
 			stk = new int[capacity];
 		} catch (OutOfMemoryError e) {
@@ -59,7 +59,7 @@ class IntStack {
 	public int peek() throws EmptyIntStackException {
 		//구현
 		if (ptr <= 0) throw new EmptyIntStackException();
-		return stk[ptr-1];
+		return stk[ptr - 1];
 	}
 
 //--- 스택을 비움 ---//
@@ -70,7 +70,11 @@ class IntStack {
 //--- 스택에서 x를 찾아 인덱스(없으면 –1)를 반환 ---//
 	public int indexOf(int x) {
 		//구현
-		for (int i = ptr-1; i >= 0; i--) {
+		if (ptr <= 0) {
+			System.out.println("스택이 비었습니다.");
+			return -1;
+		}
+		for (int i = 0; i < ptr; i++) {
 			if (stk[i] == x) return i;
 		}
 		return -1;
@@ -100,13 +104,13 @@ class IntStack {
 	public void dump() {
 		//구현
 		if (ptr <= 0) {
-			System.out.println("스택이 비어 있습니다.");
-		} else {
-			for (int i = 0; i < ptr; i++) {
-				System.out.print(stk[i] + " ");				
-			}
-			System.out.println();
+			System.out.println("스택이 비었습니다.");
+			return;
 		}
+		for (int i = 0; i < ptr; i++) {
+			System.out.print(stk[i] + " ");
+		}
+		System.out.println();
 	}
 }
 

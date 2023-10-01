@@ -10,41 +10,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 class Point {
-	private int ix;
-	private int iy;
+	private int x;
+	private int y;
 
 	public Point(int x, int y) {
-		ix = x;
-		iy = y;
+		super();
+		this.x = x;
+		this.y = y;
 	}
 
 	@Override
 	public String toString() {
-		return "<" + ix + ", " + iy + ">";
+		return "<" + x + ", " + y + ">";
 	}
 
 	public int getX() {
-		return ix;
-	}
-
-	public int getY() {
-		return iy;
+		return x;
 	}
 
 	public void setX(int x) {
-		ix = x;
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
 	}
 
 	public void setY(int y) {
-		iy = y;
+		this.y = y;
 	}
 
 	@Override
 	public boolean equals(Object p) {
-		if ((this.ix == ((Point) p).ix) && (this.iy == ((Point) p).iy))
-			return true;
-		else
-			return false;
+		if (this.x == ((Point)p).x && this.y == ((Point)p).y) return true;
+		return false;
 	}
 }
 
@@ -74,8 +73,8 @@ class objectQueue {
 //--- 생성자(constructor) ---//
 	public objectQueue(int maxlen) {
 		// 구현
-		num = front = rear = 0;
 		capacity = maxlen;
+		front = rear = num = 0;
 		try {
 			que = new ArrayList<Point>(capacity);
 		} catch (OutOfMemoryError e) {
@@ -84,34 +83,29 @@ class objectQueue {
 	}
 
 //--- 큐에 데이터를 인큐 ---//
-	public Point enque(Point x) throws OverflowQueueException {
+	public int enque(Point x) throws OverflowQueueException {
 		// 구현
-		if (num >= capacity)
-			throw new OverflowQueueException();
-		if (rear > capacity)
-			rear = 0;
+		if (num >= capacity) throw new OverflowQueueException();
 		que.add(rear++, x);
 		num++;
-		return x;
+		return 0;
 	}
 
 //--- 큐에서 데이터를 디큐 ---//
 	public Point deque() throws EmptyQueueException {
 		// 구현
-		if (num <= 0)
-			throw new EmptyQueueException();
-		if (front > capacity)
-			front = 0;
-		Point x = que.get(front++);
+		if (num <= 0) throw new EmptyQueueException();
+		Point tmp = que.get(front);
+		que.remove(front);
+		rear--;
 		num--;
-		return x;
+		return tmp;
 	}
 
 //--- 큐에서 데이터를 피크(프런트 데이터를 들여다봄) ---//
 	public Point peek() throws EmptyQueueException {
 		// 구현
-		if (num <= 0)
-			throw new EmptyQueueException();
+		if (num <= 0) throw new EmptyQueueException();
 		return que.get(front);
 	}
 
@@ -123,9 +117,13 @@ class objectQueue {
 //--- 큐에서 x를 검색하여 인덱스(찾지 못하면 –1)를 반환 ---//
 	public int indexOf(Point x) {
 		// 구현
+		if (num <= 0) {
+			System.out.println("큐가 비었습니다.");
+			return -1;
+		}
 		for (int i = 0; i < num; i++) {
-			if (que.get((i + front) % capacity) == x)
-				return i;
+			int idx = (i + front) % capacity;
+			if (que.get(idx).equals(x)) return idx;
 		}
 		return -1;
 	}
@@ -154,13 +152,14 @@ class objectQueue {
 	public void dump() {
 		// 구현
 		if (num <= 0) {
-			System.out.println("큐가 비어 있습니다.");
-		} else {
-			for (int i = 0; i < num; i++) {
-				System.out.print(que.get((i + front) % capacity) + " ");
-			}
-			System.out.println();
+			System.out.println("큐가 비었습니다.");
+			return;
 		}
+		for (int i = 0; i < num; i++) {
+			int idx = (i + front) % capacity;
+			System.out.print(que.get(idx) + " ");
+		}
+		System.out.println();
 	}
 }
 
@@ -183,13 +182,14 @@ public class 실습4_4객체큐_리스트 {
 			int x;
 			switch (menu) {
 			case 1: // 인큐
+				System.out.print("데이터: ");
 				rndx = random.nextInt(20);
 				rndy = random.nextInt(20);
 				p = new Point(rndx, rndy);
 				try {
 					s.enque(p);
 				} catch (objectQueue.OverflowQueueException e) {
-					System.out.println("큐가 가득찼있습니다.");
+					System.out.println("stack이 가득찼있습니다.");
 				}
 				break;
 

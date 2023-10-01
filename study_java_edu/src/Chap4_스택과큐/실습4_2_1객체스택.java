@@ -69,36 +69,37 @@ class objectStack{
 //--- 생성자(constructor) ---//
 	public objectStack(int capacity) {
 		//구현
-		top = 0;
 		this.capacity = capacity;
+		top = 0;
 		try {
-			data = new ArrayList<Point2>(capacity);
+			data = new ArrayList<Point2>(this.capacity);
 		} catch (OutOfMemoryError e) {
-			capacity = 0;
+			this.capacity = 0;
 		}
 	}
 
 //--- 스택에 x를 푸시 ---//
-	public void push(Point2 x) throws OverflowGenericStackException {
+	public boolean push(Point2 x) throws OverflowGenericStackException {
 		//구현
-		if (top >= capacity) {
-			throw new OverflowGenericStackException();
-		}
+		if (top >= capacity) throw new OverflowGenericStackException();
 		data.add(top++, x);
+		return true;
 	}
 
 //--- 스택에서 데이터를 팝(정상에 있는 데이터를 꺼냄) ---//
 	public Point2 pop() throws EmptyGenericStackException  {
 		//구현
 		if (top <= 0) throw new EmptyGenericStackException();
-		return data.get(--top);
+		Point2 tmp = data.get(--top);
+		data.remove(top);
+		return tmp;
 	}
 
 //--- 스택에서 데이터를 피크(peek, 정상에 있는 데이터를 들여다봄) ---//
 	public Point2 peek() throws EmptyGenericStackException  {
 		//구현
 		if (top <= 0) throw new EmptyGenericStackException();
-		return data.get(top-1);
+		return data.get(top - 1);
 	}
 
 //--- 스택을 비움 ---//
@@ -109,7 +110,11 @@ class objectStack{
 //--- 스택에서 x를 찾아 인덱스(없으면 –1)를 반환 ---//
 	public int indexOf(Point2 x) {
 		//구현
-		for (int i = top =1; i >= 0; i--) {
+		if (top <= 0) {
+			System.out.println("스택이 비었습니다.");
+			return -1;
+		}
+		for (int i = 0; i < top; i++) {
 			if (data.get(i) == x) return i;
 		}
 		return -1;
@@ -138,8 +143,12 @@ class objectStack{
 //--- 스택 안의 모든 데이터를 바닥 → 꼭대기 순서로 출력 ---//
 	public void dump() {
 		//구현
-		for (Point2 p2 : data) {
-			System.out.print(p2 + " ");
+		if (top <= 0) {
+			System.out.println("스택이 비었습니다.");
+			return;
+		}
+		for (int i = 0; i < top; i++) {
+			System.out.print(data.get(i) + " ");
 		}
 		System.out.println();
 	}
